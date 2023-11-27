@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="lib/zen5/demo"/>
+	<classpathentry kind="src" path="lib/zen5/zen5-src"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/zen5/zen5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
