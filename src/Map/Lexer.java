@@ -43,17 +43,13 @@ public class Lexer {
   }
 
   public static void main(String[] args) throws IOException {
-    var path = Path.of("fun.map").toAbsolutePath();
-//    var text = Files.readString(path);
-//    var lexer = new Lexer(text);
-    System.out.println("chemin : " + path);
-//    System.out.println(text);
-//    System.out.println(lexer);
-//    Result result;
-//    while((result = lexer.nextResult()) != null) {
-//      System.out.println(result);
-//      System.out.println("ici\n");
-//    }
+    var path = Path.of("maps/fun.map");
+    var text = Files.readString(path);
+    var lexer = new Lexer(text);
+    Result result;
+    while((result = lexer.nextResult()) != null) {
+      System.out.println(result);
+    }
   }
   
 }
