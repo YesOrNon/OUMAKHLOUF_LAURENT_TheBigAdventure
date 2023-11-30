@@ -1,4 +1,4 @@
-package Map;
+package fr.uge.monprojet;
 
 import java.util.Objects;
 
