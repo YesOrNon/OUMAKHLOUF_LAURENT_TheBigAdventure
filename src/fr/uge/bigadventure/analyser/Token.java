@@ -1,4 +1,4 @@
-package fr.uge.monprojet;
+package fr.uge.bigadventure.analyser;
 
 public enum Token {
   IDENTIFIER("[A-Za-z]+"),
@@ -11,6 +11,8 @@ public enum Token {
   COLON(":"),
   QUOTE("\"\"\"[^\"]+\"\"\""),
   VARIABLE_LIST(""),
+  ELEMENT_LIST(""),
+  END("")
   ;
 
   private final String regex;

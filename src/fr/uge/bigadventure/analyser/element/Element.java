@@ -1,4 +1,4 @@
-package fr.uge.monprojet;
+package fr.uge.bigadventure.analyser.element;
 
 import java.awt.Point;
 import java.util.Objects;
@@ -10,10 +10,7 @@ public class Element {
 	private ElementType kind;
 	private Point position;
 	private int health;
-	
-//	Suite :
-//	private boolean player;
-//	private Point zone;
+	private int[] zone;
 	
 	
 	public Element(String name, Skin skin, ElementType kind, Point position, int health) {
@@ -24,4 +21,27 @@ public class Element {
 		this.position = Objects.requireNonNull(position);
 	}
 	
+	public void name(String name) {
+		this.name = name;
+	}
+	
+	public void skin(Skin skin) {
+		this.skin = skin;
+	}
+	
+	public void position(Point position) {
+		this.position = position;
+	}
+	
+	public void kind(ElementType kind) {
+		this.kind = kind;
+	}
+	
+	public void health(int health) {
+		this.health = health;
+	}
+	
+	public void zone(int[] zone) {
+		this.zone = zone;
+	}
 }

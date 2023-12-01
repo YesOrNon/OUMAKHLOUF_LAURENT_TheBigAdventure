@@ -1,4 +1,4 @@
-package fr.uge.monprojet;
+package fr.uge.bigadventure.analyser;
 
 import java.util.Objects;
 

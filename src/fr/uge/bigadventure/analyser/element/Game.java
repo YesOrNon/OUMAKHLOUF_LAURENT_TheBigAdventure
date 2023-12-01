@@ -1,4 +1,4 @@
-package fr.uge.monprojet;
+package fr.uge.bigadventure.analyser.element;
 
 import java.util.List;
 

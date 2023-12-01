@@ -1,4 +1,4 @@
-package fr.uge.monprojet;
+package fr.uge.bigadventure.analyser.element;
 
 public enum Skin {
 	BABA, BADBAD, FOFO, IT,
