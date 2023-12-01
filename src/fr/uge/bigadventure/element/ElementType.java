@@ -1,4 +1,4 @@
-package fr.uge.bigadventure.analyser.element;
+package fr.uge.bigadventure.element;
 
 public enum ElementType {
 	DECORATIVE, OBSTACLE, ENEMY, WEAPON, PLAYER

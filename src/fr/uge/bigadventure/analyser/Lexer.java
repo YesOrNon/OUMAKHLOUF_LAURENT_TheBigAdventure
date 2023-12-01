@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fr.uge.bigadventure.analyser.element.*; // reste bon chienchien
+import fr.uge.bigadventure.element.*;
 
 public class Lexer {
 	// On ne souhiate pas affecter VARIABLE_LIST dans la liste des tokens a affecter

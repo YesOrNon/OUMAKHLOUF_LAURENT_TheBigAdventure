@@ -1,4 +1,4 @@
-package fr.uge.bigadventure.analyser.element;
+package fr.uge.bigadventure.element;
 
 import java.awt.Point;
 import java.util.Objects;
