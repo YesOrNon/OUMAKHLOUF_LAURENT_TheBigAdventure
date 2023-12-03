@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -204,6 +205,7 @@ public class Lexer {
 		result = lexer.nextResult();
 		checkError(result, Token.IDENTIFIER, "kind format");
 		element.kind(ElementType.valueOf(result.content()));
+		/*on retourne pour savoir si c'est un ennemi*/
 		return ElementType.valueOf(result.content());
   }
   
@@ -253,16 +255,22 @@ public class Lexer {
         .orElseThrow(() -> new NumberFormatException("Invalid number format"));
   	result = lexer.nextResult();
   	checkError(result, Token.RIGHT_PARENS, "zone format");
-  	Point[][] zone = null;
-  	for (int x1 = x; x < i; x++) {
-  		for (int y2 = y; y < j; y++) {
-  			Point p = null;
-  			p.x = x;
-  			p.y = y;
-  			// bon faut pas utiliser add ca marche pas
-  			zone[x][y] = p; 
+  	ArrayList<Point> zone = new ArrayList<Point>();
+  	for (; x < i; x++) {
+  		for (; y < j; y++) {
+  			Point p = new Point(x, y);
+  			zone.add(p);
   		}
   	}
+  	element.zone(zone);
+  }
+  
+  private void setBehavior(Element element, Result result, Lexer lexer) {
+	result = lexer.nextResult();
+	checkError(result, Token.COLON, "behavior format");
+	result = lexer.nextResult();
+	checkError(result, Token.IDENTIFIER, "behavior format");
+	element.behavior(EnemyBehavior.valueOf(result.content()));
   }
   
   private boolean isMatch(Lexer lexer) throws Exception {
@@ -339,8 +347,11 @@ public class Lexer {
 		  			else if (result.content().equals("player")) {
 		  				element = (Player)element;
 		  			}
-		  			else if (result.content().equals("element")) {
+		  			else if (result.content().equals("zone")) {
 		  				setZone(element, result, lexer);
+		  			}
+		  			else if (result.content().equals("behavior")) {
+		  				setBehavior(element, result, lexer);
 		  			}
 		  		}
 	  		}

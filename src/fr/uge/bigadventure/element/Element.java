@@ -1,6 +1,7 @@
 package fr.uge.bigadventure.element;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Element {
@@ -10,7 +11,7 @@ public class Element {
 	private ElementType kind;
 	private Point position;
 	private int health;
-	private int[] zone;
+	private ArrayList<Point> zone;
 	
 	
 	public Element(String name, Skin skin, ElementType kind, Point position, int health) {
@@ -41,7 +42,9 @@ public class Element {
 		this.health = health;
 	}
 	
-	public void zone(int[] zone) {
+	public void zone(ArrayList<Point> zone) {
+		// int[] vers Arraylist à cause de de setzone
 		this.zone = zone;
 	}
+	
 }

@@ -10,4 +10,9 @@ public class Enemy extends Element {
 		super(name, skin, ElementType.ENEMY, position, health);
 		this.behavior = behavior;
 	}
+	
+	public void behavior(EnemyBehavior behavior) {
+		//this.behavior = EnemyBehavior.STROLL;
+		this.behavior = behavior;
+	}
 }
