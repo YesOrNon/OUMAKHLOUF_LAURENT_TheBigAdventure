@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import fr.uge.bigadventure.element.*;
 
 public class Lexer {
+	//ptit test
 	// On ne souhiate pas affecter VARIABLE_LIST dans la liste des tokens a affecter
 	private static final Token[] TOKENS_ARRAY = Token.values();
   private static final List<Token> TOKENS = Arrays.asList(Arrays.copyOf(TOKENS_ARRAY, TOKENS_ARRAY.length - 3));
