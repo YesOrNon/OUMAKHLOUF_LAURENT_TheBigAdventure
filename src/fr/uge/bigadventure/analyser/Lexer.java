@@ -331,6 +331,28 @@ public class Lexer {
 	  	}
 	  	
 	  	// ELEMENT
+        	
+	  	//CHANGER TOUT CE QUI SUIT EN SWITCH
+
+	  	/*
+	  	else if (headerResult.token() == Token.ELEMENT_LIST) {
+	  		String name = null;
+	  		Skin skin = null;
+	  		Point position = null;
+	  	while (result != null) {
+	        // On entre dans un nouvel élément
+	        if (result.token() == Token.IDENTIFIER && result.content().equals("element")) {
+	          while (result != null && result.token() != Token.LEFT_BRACKET) { // toujours dans le même élément
+	        	switch(result.content()) {
+	        	  case "name":
+	        		setName(element, result, lexer);
+	        	  case "skin":
+	        		setSkin(element, result, lexer);
+	        	}
+	          }
+	        }
+         */
+	  	
 	  	else if (headerResult.token() == Token.ELEMENT_LIST) {
 	  		String name = null;
 	  		Skin skin = null;
@@ -377,6 +399,8 @@ public class Lexer {
           	}
             nbElem++;
             System.out.println(element);
+            //CHANGER TOUT CE QUIL Y A AU DESSUS AU SWITCH
+            
 //            System.out.println(elementGrid[position.x][position.y] = element);
             
             // Ajout dans la grid
