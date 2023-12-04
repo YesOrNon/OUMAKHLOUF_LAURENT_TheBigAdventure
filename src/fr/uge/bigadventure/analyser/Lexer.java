@@ -1,7 +1,6 @@
 package fr.uge.bigadventure.analyser;
 
 import static java.util.stream.Collectors.joining;
-
 import java.awt.Point;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,6 +51,8 @@ public class Lexer {
     throw new AssertionError();
   }
   
+  
+  // PATTERN
   private List<Result> headerPattern = List.of(
   		
 		  // GRID
@@ -83,6 +84,7 @@ public class Lexer {
 		  
 		  );
   
+  // ERROR from token
   private void checkError(Result result, Token token, String message) throws Exception {
   	if (result.token() != token) {
   		throw new Exception("Error : " + message);
@@ -93,6 +95,8 @@ public class Lexer {
     return headerResult.token() == result.token() || headerResult.token() == Token.VARIABLE_LIST;
   }
   
+  
+  // ENCODING
   private HashMap<String, String> processVariableListResult(Lexer lexer, HashMap<String, String> encodingMap, Result result, int error) throws Exception {
 		while (!result.content().equals("data")) {
 			if (result.token() == Token.IDENTIFIER) {
@@ -129,50 +133,57 @@ public class Lexer {
 		return encodingMap;
   }
   
+  
+  // Grid of encodings
   private char[][] processQuoteResult(Result result, int width, int height, int error) {
   	
-		String[] lines = result.content().split("\n");
-		
-		char[][] charArray = Arrays.stream(lines, 1, lines.length - 1)
-		    .map(line -> line.trim().toCharArray())
-		    .toArray(char[][]::new);
-		
-		if (charArray.length != height) {
-			System.out.println("Error : Height is not correct in drawing");
-			error++;
-		}
-		
-   for (int i = 0; i < charArray.length; i++) {
-  	 if (charArray[i].length != width) {
-  		 System.out.println("error width");
-  	 }
-     for (int j = 0; j < charArray[i].length; j++) {
-         System.out.print(charArray[i][j] + " ");
-     }
-     System.out.println();
-   }
-   return charArray;
+	String[] lines = result.content().split("\n");
+	
+	char[][] charArray = Arrays.stream(lines, 1, lines.length - 1)
+	    .map(line -> line.trim().toCharArray())
+	    .toArray(char[][]::new);
+	
+	if (charArray.length != height) {
+		System.out.println("Error : Height is not correct in drawing");
+		error++;
+	}
+	
+	for (int i = 0; i < charArray.length; i++) {
+		if (charArray[i].length != width) {
+		  System.out.println("error width");
+	  }
+    for (int j = 0; j < charArray[i].length; j++) {
+    	System.out.print(charArray[i][j] + " ");
+    }
+    	System.out.println();
+	}
+	return charArray;
    
 }
   
-  private void setName(Element element, Result result, Lexer lexer) throws Exception {
+  // NAME
+  private String setName(GameObject element, Result result, Lexer lexer) throws Exception {
 		result = lexer.nextResult();
 		checkError(result, Token.COLON, "name format");
 		result = lexer.nextResult();
 		checkError(result, Token.IDENTIFIER, "skin format");
   	element.name(result.content());
+  	return result.content();
   }
   
-  private void setSkin(Element element, Result result, Lexer lexer) throws Exception {
+  // SKIN
+  private Skin setSkin(GameObject element, Result result, Lexer lexer) throws Exception {
 		result = lexer.nextResult();
 		checkError(result, Token.COLON, "skin format");
 		result = lexer.nextResult();
 		checkError(result, Token.IDENTIFIER, "skin format");
 		element.skin(Skin.valueOf(result.content()));
+		return Skin.valueOf(result.content());
   }
  
-  @SuppressWarnings("null")
-	private void setPosition(Element element, Result result, Lexer lexer) throws Exception {
+  // POSITION
+	@SuppressWarnings("null")
+	private Point setPosition(GameObject element, Result result, Lexer lexer) throws Exception {
   	int x, y;
 		result = lexer.nextResult();
 		checkError(result, Token.COLON, "Number format");
@@ -197,9 +208,11 @@ public class Lexer {
 		position.x = x;
 		position.y = y;
   	element.position(position);
+  	return position;
   }
 
-  private ElementType setKind(Element element, Result result, Lexer lexer) throws Exception {
+  // KIND
+  private ElementType setKind(GameObject element, Result result, Lexer lexer) throws Exception {
 		result = lexer.nextResult();
 		checkError(result, Token.COLON, "kind format");
 		result = lexer.nextResult();
@@ -209,7 +222,8 @@ public class Lexer {
 		return ElementType.valueOf(result.content());
   }
   
-  private void setHealth(Element element, Result result, Lexer lexer) throws Exception {
+  // HEALTH
+  private void setHealth(GameObject element, Result result, Lexer lexer) throws Exception {
   	result = lexer.nextResult();
   	checkError(result, Token.COLON, "health format");
   	result = lexer.nextResult();
@@ -220,7 +234,8 @@ public class Lexer {
 		 element.health(hp);
   }
   
-  private void setZone(Element element, Result result, Lexer lexer) throws Exception {
+  // ZONE
+  private void setZone(GameObject element, Result result, Lexer lexer) throws Exception {
   	result = lexer.nextResult();
   	checkError(result, Token.COLON, "zone format");
   	result = lexer.nextResult();
@@ -265,7 +280,7 @@ public class Lexer {
   	element.zone(zone);
   }
   
-  private void setBehavior(Element element, Result result, Lexer lexer) {
+  private void setBehavior(Enemy element, Result result, Lexer lexer) throws Exception {
 	result = lexer.nextResult();
 	checkError(result, Token.COLON, "behavior format");
 	result = lexer.nextResult();
@@ -273,7 +288,7 @@ public class Lexer {
 	element.behavior(EnemyBehavior.valueOf(result.content()));
   }
   
-  private boolean isMatch(Lexer lexer) throws Exception {
+  private void isMatch(Lexer lexer) throws Exception {
   	
   	int error = 0;
   	int width = -1;
@@ -281,6 +296,7 @@ public class Lexer {
   	char[][] charArray = null;
   	Result result, headerResult;
 		var encodingMap = new HashMap<String, String>(); // LAVA = L
+		GameObject element = null;
 		
 	  for (int index = 0; (index < headerPattern.size()) 
 	  		&& ((result = lexer.nextResult()) != null); index++) {
@@ -318,56 +334,63 @@ public class Lexer {
 	  	// DATA
 	  	else if (headerResult.token() == Token.QUOTE) {
 	  		charArray = processQuoteResult(result, width, height, error);
-//	  		System.out.println(Arrays.deepToString(charArray));
 	  	}
 	  	
 	  	// ELEMENT
 	  	else if (headerResult.token() == Token.ELEMENT_LIST) {
-	  		while (!result.content().equals("data")) {
-	  			Element element = null;
-	  			if (result.token() == Token.IDENTIFIER) {
-		  			if (result.content().equals("name")) {
-		  				setName(element, result, lexer);
-		  			}
-		  			else if (result.content().equals("skin")) {
-		  				setSkin(element, result, lexer);
-	  				}
-		  			else if (result.content().equals("position")) {
-		  				setPosition(element, result, lexer);
-		  			}
-		  			else if (result.content().equals("kind")) {
-		  				var kind = setKind(element, result, lexer);
-		  				if (kind.equals(ElementType.ENEMY)) {
-		  					element = (Enemy)element;
-		  				}
-		  			}
-		  			else if (result.content().equals("health")) {
-		  				setHealth(element, result, lexer);
-		  			}
-		  			else if (result.content().equals("player")) {
-		  				element = (Player)element;
-		  			}
-		  			else if (result.content().equals("zone")) {
-		  				setZone(element, result, lexer);
-		  			}
-		  			else if (result.content().equals("behavior")) {
-		  				setBehavior(element, result, lexer);
-		  			}
-		  		}
-	  		}
-	  	}
+	  		String name = null;
+	  		Skin skin = null;
+	  		Point position = null;
+        while (!result.content().equals("data")) {
+          if (result.token() == Token.IDENTIFIER) {
+              if (result.content().equals("name")) {		// NAME
+                  name = setName(element, result, lexer);
+              } 
+              else if (result.content().equals("skin")) {		// SKIN
+                  skin = setSkin(element, result, lexer);
+              } 
+              else if (result.content().equals("position")) {   // POSITION
+                  position = setPosition(element, result, lexer);
+              } 
+              else if (result.content().equals("kind")) {		// KIND
+                  var kind = setKind(element, result, lexer);
+                  if (kind.equals(ElementType.ENEMY)) {
+                      element = new Enemy(name, skin, position, 0, null);
+                  } 
+                  else if (kind.equals(ElementType.PLAYER)) {
+                      element = new Player(name, skin, position, 0);
+                  } 
+                  else {
+                      element = new Element(name, skin, kind, position, 0);
+                  }
+              } 
+              else if (result.content().equals("health")) {  // HEALTH
+                  setHealth(element, result, lexer);
+              } 
+              else if (result.content().equals("player")) {
+                  // handle player-specific logic if needed
+              } 
+              else if (result.content().equals("zone")) {   // ZONE
+                  setZone(element, result, lexer);
+              } 
+              else if (result.content().equals("behavior") && element instanceof Enemy) {   // BEHAVIOR
+                  setBehavior((Enemy)element, result, lexer);
+              }
+          }
+          // Move to the next result
+          result = lexer.nextResult();
+        }
+    }
+}
   	}
 	  
-	  Element[][] elementGrid = null;
-	  for (int i = 0; i < width; i++) {
-	  	for (int j = 0; j < height; i++) {
-	  		encodingMap.getOrDefault(charArray[i][j], text)
-	  		;
-	  	}
-	  }
-	  System.out.println("Errors : " + error);
-  	return error == 0;
-  }
+//	  Element[][] elementGrid = null;
+//	  for (int i = 0; i < width; i++) {
+//	  	for (int j = 0; j < height; i++) {
+//	  		encodingMap.getOrDefault(charArray[i][j], text);
+//	  	}
+//	  }
+	  
 	  
   public static void main(String[] args) throws IOException {
     var path = Path.of("maps/fun.map");

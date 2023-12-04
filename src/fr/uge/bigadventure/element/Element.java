@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Element {
-//	Phase 0:
+public final class Element implements GameObject {
+
 	private String name;
 	private Skin skin;
 	private ElementType kind;
@@ -14,13 +14,13 @@ public class Element {
 	private ArrayList<Point> zone;
 	
 	
-	public Element(String name, Skin skin, ElementType kind, Point position, int health) {
-		this.name = name;
-		this.skin = Objects.requireNonNull(skin);
-		this.kind = kind;
-		this.health = health;
-		this.position = Objects.requireNonNull(position);
-	}
+  public Element(String name, Skin skin, ElementType kind, Point position, int health) {
+    this.name = name;
+    this.skin = skin;
+    this.kind = kind;
+    this.position = position;
+    this.health = health;
+  }
 	
 	public void name(String name) {
 		this.name = name;
@@ -46,5 +46,6 @@ public class Element {
 		// int[] vers Arraylist à cause de de setzone
 		this.zone = zone;
 	}
+
 	
 }
