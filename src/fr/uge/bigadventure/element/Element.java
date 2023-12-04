@@ -46,6 +46,22 @@ public final class Element implements GameObject {
 		// int[] vers Arraylist à cause de de setzone
 		this.zone = zone;
 	}
+	
+	@Override
+	public String toString() {
+		var builder = new StringBuilder();
+		builder.append("Element : \n");
+		builder.append("\t" + name + "\n");
+		builder.append("\t" + skin + "\n");
+		builder.append("\t" + kind + "\n");
+		if (position != null) {
+			builder.append("\t" + position.x + ", " + position.y + "\n");
+		}
+		if (health != 0) {
+			builder.append("\t" + health + "\n");
+		}
+		return builder.toString();
+	}
 
 	
 }

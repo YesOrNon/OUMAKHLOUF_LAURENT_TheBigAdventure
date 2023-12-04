@@ -8,7 +8,6 @@ public final class Player implements GameObject {
   private boolean player;
   private String name;
   private Skin skin;
-  private ElementType kind;
   private Point position;
   private int health;
   private ArrayList<Point> zone;
@@ -16,7 +15,6 @@ public final class Player implements GameObject {
 	public Player(String name, Skin skin, Point position, int health) {
     this.name = name;
     this.skin = skin;
-    this.kind = ElementType.PLAYER;
     this.position = position;
     this.health = health;
     this.player = true;
@@ -34,10 +32,6 @@ public final class Player implements GameObject {
 	    this.position = position;
 	}
 	
-	public void kind(ElementType kind) {
-	    this.kind = kind;
-	}
-	
 	public void health(int health) {
 	    this.health = health;
 	}
@@ -46,5 +40,21 @@ public final class Player implements GameObject {
 	    this.zone = zone;
 	}
 
+	public void kind(ElementType kind) {
+			return; // probablement besoin de changer
+	}
+
+	@Override
+	public String toString() {
+		var builder = new StringBuilder();
+		builder.append("Player :\n");
+		builder.append("\t" + name + "\n");
+		builder.append("\t" + skin + "\n");
+		if (position != null) {
+			builder.append("\t" + position.x + ", " + position.y + "\n");
+		}
+		builder.append("\t" + health + "\n");
+		return builder.toString();
+	}
 	
 }

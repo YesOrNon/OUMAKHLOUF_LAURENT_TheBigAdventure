@@ -12,7 +12,6 @@ public enum Token {
   QUOTE("\"\"\"[^\"]+\"\"\""),
   VARIABLE_LIST(""),
   ELEMENT_LIST(""),
-  END("")
   ;
 
   private final String regex;

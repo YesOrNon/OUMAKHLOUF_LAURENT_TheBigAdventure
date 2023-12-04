@@ -16,7 +16,7 @@ public final class Enemy implements GameObject {
   public Enemy(String name, Skin skin, Point position, int health, EnemyBehavior behavior) {
     this.name = name;
     this.skin = skin;
-    this.kind = ElementType.ENEMY;
+    this.kind = ElementType.enemy;
     this.position = position;
     this.health = health;
     this.behavior = behavior;
@@ -50,4 +50,22 @@ public final class Enemy implements GameObject {
 	public void behavior(EnemyBehavior behavior) {
 		this.behavior = behavior;
 	}
+	
+	@Override
+	public String toString() {
+		var builder = new StringBuilder();
+		builder.append("Enemy : \n");
+		builder.append("\t" + name + "\n");
+		builder.append("\t" + skin + "\n");
+		if (position != null) {
+			builder.append("\t" + position.x + ", " + position.y + "\n");
+		}
+		if (health != 0) {
+			builder.append("\t" + health + "\n");
+		}
+		builder.append("\t" + behavior + "\n");
+
+		return builder.toString();
+	}
+
 }

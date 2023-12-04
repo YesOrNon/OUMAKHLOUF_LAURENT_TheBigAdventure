@@ -8,8 +8,8 @@ public sealed interface GameObject permits Element, Player, Enemy  {
   void name(String name);
   void skin(Skin skin);
   void position(Point position);
-  void kind(ElementType kind);
   void health(int health);
-  void zone(ArrayList<Point> zone);
-  
+	void kind(ElementType kind);
+	void zone(ArrayList<Point> zone);
+ 
 }
