@@ -19,6 +19,7 @@ import fr.uge.bigadventure.element.ElementType;
 import fr.uge.bigadventure.element.Enemy;
 import fr.uge.bigadventure.element.EnemyBehavior;
 import fr.uge.bigadventure.element.GameObject;
+import fr.uge.bigadventure.element.Map;
 import fr.uge.bigadventure.element.Player;
 import fr.uge.bigadventure.element.Skin;
 
@@ -139,29 +140,72 @@ public class Lexer {
   
   // Grid of encodings
   private String[][] processQuoteResult(Result result, int width, int height) throws Exception {
+  	String[] lines = result.content().split("\n");
+  	String[][] stringArray = Arrays.stream(lines, 1, lines.length - 1)
+  	    .map(line -> line.trim().split(""))
+  	    .toArray(String[][]::new);
+  	if (stringArray.length != height) {
+  		throw new Exception("Error : Height is not correct in data");
+  	}
   	
-  var builder = new StringBuilder();
-	String[] lines = result.content().split("\n");
-	String[][] stringArray = Arrays.stream(lines, 1, lines.length - 1)
-	    .map(line -> line.trim().split(""))
-	    .toArray(String[][]::new);
-	if (stringArray.length != height) {
-		throw new Exception("Error : Height is not correct in data");
-	}
-	
-	for (int i = 0; i < stringArray.length; i++) {
-		if (stringArray[i].length != width) {
-		  throw new Exception("Error : Width is not correct in data");
-	  }
-    for (int j = 0; j < stringArray[i].length; j++) {
-    	builder.append(stringArray[i][j]).append(" ");
+  	for (int i = 0; i < stringArray.length; i++) {
+  		if (stringArray[i].length != width) {
+  		  throw new Exception("Error : Width is not correct in data");
+  	  }
+  	}
+  	return stringArray;
+  }
+  
+  //  ELEMENTS
+  private ArrayList<GameObject> processElementList(Lexer lexer, Result result, ArrayList<GameObject> elementsList) throws Exception {
+    String name = null;
+  	Skin skin = null;
+  	Point position = null;
+    while (result != null) {
+    	// On entre dans un nouvel élément
+      if (result.token() == Token.IDENTIFIER && result.content().equals("element")) {
+    		GameObject element = new Element(text, null, null, null, 0);
+      	while (result != null && result.token() != Token.LEFT_BRACKET) { // toujours dans le même élément
+          switch (result.content()) {
+          	case "name" :
+          		name = setName(element, result, lexer);
+          		break;
+          	case "skin" :
+          		skin = setSkin(element, result, lexer);
+          		break;
+          	case "position" :
+          		position = setPosition(element, result, lexer);
+          		break;
+          	case "player" : 
+          		element = new Player(name, skin, position, 0);
+          		break;
+          	case "kind" :
+          		var kind = setKind(element, result, lexer);
+          		if (kind.equals(ElementType.enemy)) {
+          			element = new Enemy(name, skin, position, 0, null);
+          		} else {
+          			element = new Element(name, skin, kind, position, 0);
+          		}
+          		break;
+          	case "health" :
+          		setHealth(element, result, lexer);
+          		break;
+          	case "zone" :
+          		setZone(element, result, lexer);
+          		break;
+          	case "behavior" :
+          		setBehavior((Enemy)element, result, lexer);
+          		break;
+        		default :
+          }
+          result = lexer.nextResult();
+      	}
+        elementsList.add(element);
+      }
+      result = lexer.nextResult();
     }
-    	builder.append("\n");
+		return elementsList;
 	}
-	System.out.println(builder);
-	return stringArray;
-   
-}
   
   // NAME
   private String setName(GameObject element, Result result, Lexer lexer) throws Exception {
@@ -286,16 +330,14 @@ public class Lexer {
   	element.behavior(EnemyBehavior.valueOf(result.content()));
   }
   
-  private void isMatch(Lexer lexer) throws Exception {
+  private Map isMatch(Lexer lexer) throws Exception {
  
   	int width = -1;
   	int height = -1;
-		int nbElem = 0;
   	String[][] stringArray = null;
   	Result result, headerResult;
 		var encodingMap = new HashMap<String, String>(); // L = LAVA
-		GameObject element = new Element(text, null, null, null, 0);
-		GameObject[][] elementGrid = null;
+		var elementsList = new ArrayList<GameObject>();
 		
 	  for (int index = 0; (index < headerPattern.size()) 
 	  		&& ((result = lexer.nextResult()) != null); index++) {
@@ -312,7 +354,6 @@ public class Lexer {
 	  	
 	  	// SIZE
 	  	else if (headerResult.token() == Token.NUMBER) {
-	  		// gestion d'erreurs à modifier
 	  		int number = Optional.of(result.content())
             .map(Integer::parseInt)
             .orElseThrow(() -> new NumberFormatException("Invalid number format"));
@@ -331,97 +372,11 @@ public class Lexer {
 	  	}
 	  	
 	  	// ELEMENT
-        	
-	  	//CHANGER TOUT CE QUI SUIT EN SWITCH
-
-	  	/*
 	  	else if (headerResult.token() == Token.ELEMENT_LIST) {
-	  		String name = null;
-	  		Skin skin = null;
-	  		Point position = null;
-	  	while (result != null) {
-	        // On entre dans un nouvel élément
-	        if (result.token() == Token.IDENTIFIER && result.content().equals("element")) {
-	          while (result != null && result.token() != Token.LEFT_BRACKET) { // toujours dans le même élément
-	        	switch(result.content()) {
-	        	  case "name":
-	        		setName(element, result, lexer);
-	        	  case "skin":
-	        		setSkin(element, result, lexer);
-	        	}
-	          }
-	        }
-         */
-	  	
-	  	else if (headerResult.token() == Token.ELEMENT_LIST) {
-	  		String name = null;
-	  		Skin skin = null;
-	  		Point position = null;
-        while (result != null) {
-        	// On entre dans un nouvel élément
-          if (result.token() == Token.IDENTIFIER && result.content().equals("element")) {
-          	while (result != null && result.token() != Token.LEFT_BRACKET) { // toujours dans le même élément
-              if (result.content().equals("name")) {		// NAME
-                  name = setName(element, result, lexer);
-              } 
-              else if (result.content().equals("skin")) {		// SKIN
-                  skin = setSkin(element, result, lexer);
-              } 
-              else if (result.content().equals("position")) {   // POSITION
-                  position = setPosition(element, result, lexer);
-              } 
-              else if (result.content().equals("player")) {
-              	element = new Player(name, skin, position, 0);
-              }
-              else if (result.content().equals("kind")) {		// KIND
-                  var kind = setKind(element, result, lexer);
-                  if (kind.equals(ElementType.enemy)) {
-                      element = new Enemy(name, skin, position, 0, null);
-                  } 
-                  else {
-                      element = new Element(name, skin, kind, position, 0);
-                  }
-              } 
-              else if (result.content().equals("health")) {  // HEALTH
-                  setHealth(element, result, lexer);
-              } 
-              else if (result.content().equals("player")) {
-              	System.out.println("\n\t\t\tjoueur mon gars icic mec\n");
-                  element = new Player(name, skin, position, 0);
-              } 
-              else if (result.content().equals("zone")) {   // ZONE
-                  setZone(element, result, lexer);
-              } 
-              else if (result.content().equals("behavior")) {   // BEHAVIOR
-                  setBehavior((Enemy)element, result, lexer);
-              }
-              result = lexer.nextResult();
-          	}
-            nbElem++;
-            System.out.println(element);
-            //CHANGER TOUT CE QUIL Y A AU DESSUS AU SWITCH
-            
-//            System.out.println(elementGrid[position.x][position.y] = element);
-            
-            // Ajout dans la grid
-//            GameObject[][] elementGrid = null;
-//            for (int i = 0; i < width; i++) {
-//            	for (int j = 0; j < height; j++) {
-//            		if (!stringArray[i][j].equals("")) {
-//            			elementGrid[i][j] = encodingMap.get(stringArray[i][j]);
-//            		}
-//            	}
-//            }
-          }
-//          System.out.println("\t\t\ticic");
-//          System.out.println(element);
-//          element = new Element(text, null, null, null, 0);
-          result = lexer.nextResult();
-        }
-    	  System.out.println(nbElem);
-    	  System.out.println(elementGrid);
+	  		elementsList = processElementList(lexer, result, elementsList);
 	  	}
 	  }
+	  return new Map(width, height, stringArray, elementsList, encodingMap);
   }
 	  
 	  
@@ -430,7 +385,8 @@ public class Lexer {
     var text = Files.readString(path);
     var lexer = new Lexer(text);
     Result result;
-    lexer.isMatch(lexer);
+    var map = lexer.isMatch(lexer);
+    System.out.println(map);
 //    while((result = lexer.nextResult()) != null) {
 //      System.out.println(result);
 //    }
