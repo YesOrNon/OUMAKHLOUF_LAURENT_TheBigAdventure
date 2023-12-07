@@ -12,5 +12,5 @@ public sealed interface GameObject permits Element, Player, Enemy  {
 	void kind(ElementType kind);
 	void zone(ArrayList<Point> zone);
 	void damage(int damage);
- 
+	
 }
