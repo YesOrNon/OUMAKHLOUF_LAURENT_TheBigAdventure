@@ -316,7 +316,7 @@ public class Lexer {
   	for (; x < i; x++) {
   		for (; y < j; y++) {
   			Point p = new Point(x, y);
-  			zone.add(p);
+  			zone.add(p); // zone est toujours vide
   		}
   	}
   	element.zone(zone);

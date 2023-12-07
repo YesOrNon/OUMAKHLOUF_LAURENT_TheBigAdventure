@@ -64,6 +64,7 @@ public final class Enemy implements GameObject {
 			builder.append("\t" + health + "\n");
 		}
 		builder.append("\t" + behavior + "\n");
+		builder.append("\t" + zone + "\n"); // vide
 
 		return builder.toString();
 	}
