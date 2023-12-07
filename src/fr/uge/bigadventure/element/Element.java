@@ -2,7 +2,6 @@ package fr.uge.bigadventure.element;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public final class Element implements GameObject {
 
@@ -12,6 +11,7 @@ public final class Element implements GameObject {
 	private Point position;
 	private int health;
 	private ArrayList<Point> zone;
+	private int damage;
 	
 	
   public Element(String name, Skin skin, ElementType kind, Point position, int health) {
@@ -47,19 +47,35 @@ public final class Element implements GameObject {
 		this.zone = zone;
 	}
 	
+	public void damage(int damage) {
+		this.damage = damage;
+	}
+	
+	public String printZone() {
+		var builder = new StringBuilder();
+		String corner = "\tTop Left Corner : ";
+		builder.append("\tZone : ");
+		for (var point : zone) {
+			builder.append(corner)
+			       .append(point.x).append(", ")
+			       .append(point.y);
+			corner = "\tTop Right Corner : ";
+		}
+		builder.append("\n");
+		return builder.toString();
+	}
+	
 	@Override
 	public String toString() {
 		var builder = new StringBuilder();
 		builder.append("Element : \n");
-		builder.append("\t" + name + "\n");
-		builder.append("\t" + skin + "\n");
-		builder.append("\t" + kind + "\n");
-		if (position != null) {
-			builder.append("\t" + position.x + ", " + position.y + "\n");
-		}
-		if (health != 0) {
-			builder.append("\t" + health + "\n");
-		}
+		builder.append("\tName : " + name + "\n");
+		builder.append("\tSkin : " + skin + "\n");
+		builder.append("\tKind : " + kind + "\n");
+		builder.append("\tPosition : " + position.x + ", " + position.y + "\n");
+		if (health != 0) {builder.append("\tHealth : " + health + "\n");}
+		if (damage != 0) {builder.append("\tDamage : " + damage + "\n");}
+		if (zone != null) {printZone();}
 		return builder.toString();
 	}
 

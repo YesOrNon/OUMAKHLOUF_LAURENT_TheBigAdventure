@@ -19,7 +19,11 @@ public final class Player implements GameObject {
     this.health = health;
     this.player = true;
 	}
-
+	
+	public void hit(int damage) {
+		this.health -= damage;
+	}
+	
   public void name(String name) {
     this.name = name;
 	}
@@ -41,19 +45,21 @@ public final class Player implements GameObject {
 	}
 
 	public void kind(ElementType kind) {
-			return; // probablement besoin de changer
+			return;
+	}
+	
+	public void damage(int damage) {
+		return;
 	}
 
 	@Override
 	public String toString() {
 		var builder = new StringBuilder();
 		builder.append("Player :\n");
-		builder.append("\t" + name + "\n");
-		builder.append("\t" + skin + "\n");
-		if (position != null) {
-			builder.append("\t" + position.x + ", " + position.y + "\n");
-		}
-		builder.append("\t" + health + "\n");
+		builder.append("\tName : " + name + "\n");
+		builder.append("\tSkin : " + skin + "\n");
+		builder.append("\tPosition : " + position.x + ", " + position.y + "\n");
+		builder.append("\tHealth : " + health + "\n");
 		return builder.toString();
 	}
 	

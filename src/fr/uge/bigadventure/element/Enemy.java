@@ -12,14 +12,16 @@ public final class Enemy implements GameObject {
   private Point position;
   private int health;
   private ArrayList<Point> zone;
+  private int damage;
 	
-  public Enemy(String name, Skin skin, Point position, int health, EnemyBehavior behavior) {
+  public Enemy(String name, Skin skin, Point position, int health, EnemyBehavior behavior, int damage) {
     this.name = name;
     this.skin = skin;
     this.kind = ElementType.enemy;
     this.position = position;
     this.health = health;
     this.behavior = behavior;
+    this.damage = damage;
 }
 	
 	public void name(String name) {
@@ -51,20 +53,37 @@ public final class Enemy implements GameObject {
 		this.behavior = behavior;
 	}
 	
+	public void damage(int damage) {
+		this.damage = damage;
+	}
+	
+	public String printZone() {
+		var builder = new StringBuilder();
+		String corner = "\tTop Left Corner : ";
+		builder.append("\tZone : ");
+		for (var point : zone) {
+			builder.append(corner)
+			       .append(point.x).append(", ")
+			       .append(point.y);
+			corner = "\tTop Right Corner : ";
+		}
+		builder.append("\n");
+		return builder.toString();
+	}
+	
+	
 	@Override
 	public String toString() {
 		var builder = new StringBuilder();
 		builder.append("Enemy : \n");
-		builder.append("\t" + name + "\n");
-		builder.append("\t" + skin + "\n");
-		if (position != null) {
-			builder.append("\t" + position.x + ", " + position.y + "\n");
-		}
-		if (health != 0) {
-			builder.append("\t" + health + "\n");
-		}
-		builder.append("\t" + behavior + "\n");
-		builder.append("\t" + zone + "\n"); // vide
+		builder.append("\tName : " + name + "\n");
+		builder.append("\tSkin : " + skin + "\n");
+		builder.append("\tPosition : " + position.x + ", " + position.y + "\n");
+		builder.append("\tHealth : " + health + "\n");
+		if (behavior != null) {builder.append("\tBehavior : " + behavior + "\n");}
+		if (zone != null) {builder.append(printZone());}
+		builder.append("\tDamage : " + damage);
+		builder.append("\n");
 
 		return builder.toString();
 	}

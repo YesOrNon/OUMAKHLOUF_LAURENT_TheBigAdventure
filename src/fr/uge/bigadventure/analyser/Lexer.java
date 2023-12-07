@@ -182,7 +182,7 @@ public class Lexer {
           	case "kind" :
           		var kind = setKind(element, result, lexer);
           		if (kind.equals(ElementType.enemy)) {
-          			element = new Enemy(name, skin, position, 0, null);
+          			element = new Enemy(name, skin, position, 0, null, 0);
           		} else {
           			element = new Element(name, skin, kind, position, 0);
           		}
@@ -196,6 +196,8 @@ public class Lexer {
           	case "behavior" :
           		setBehavior((Enemy)element, result, lexer);
           		break;
+          	case "damage" :
+          		setDamage(element, result, lexer);
         		default :
           }
           result = lexer.nextResult();
@@ -313,13 +315,21 @@ public class Lexer {
   	result = lexer.nextResult();
   	checkError(result, Token.RIGHT_PARENS, "zone format");
   	ArrayList<Point> zone = new ArrayList<Point>();
-  	for (; x < i; x++) {
-  		for (; y < j; y++) {
-  			Point p = new Point(x, y);
-  			zone.add(p); // zone est toujours vide
-  		}
-  	}
+  	Point upLeft = new Point(x, y);
+  	Point downRight = new Point(x + i, j + y);
+  	zone.add(upLeft);
+  	zone.add(downRight);
   	element.zone(zone);
+  }
+  
+  private void setDamage(GameObject element, Result result, Lexer lexer) throws Exception {
+  	result = lexer.nextResult();
+  	checkError(result, Token.COLON, "damage format");
+  	result = lexer.nextResult();
+  	int damage = Optional.of(result.content())
+        .map(Integer::parseInt)
+        .orElseThrow(() -> new NumberFormatException("Invalid number format"));
+  	element.damage(damage);
   }
   
   private void setBehavior(Enemy element, Result result, Lexer lexer) throws Exception {
@@ -381,7 +391,7 @@ public class Lexer {
 	  
 	  
   public static void main(String[] args) throws Exception {
-    var path = Path.of("maps/fun.map");
+    var path = Path.of("maps/monster_house.map");
     var text = Files.readString(path);
     var lexer = new Lexer(text);
     Result result;
