@@ -1,15 +1,15 @@
 package fr.uge.bigadventure.element;
 
-import java.util.Objects;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
+import java.util.Objects;
 
 import fr.umlv.zen5.ScreenInfo;
 
 public class Graphic {
   public static float windowWidth;
   public static float windowHeight;
+  
 	
   public Graphic(ScreenInfo screenInfo) {
 	//il doit y avoir une fenetre

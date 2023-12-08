@@ -20,6 +20,14 @@ public class Map {
 		this.encodingMap = Objects.requireNonNull(encodingMap);
 	}
 	
+	public int getHeight() {
+		return this.height;
+	}
+	
+	public int getWidht() {
+		return this.width;
+	}
+	
 	public String printObstacles() {
 		var builder = new StringBuilder();
 		builder.append("Obstacles grid :\n");

@@ -340,7 +340,7 @@ public class Lexer {
   	element.behavior(EnemyBehavior.valueOf(result.content()));
   }
   
-  private Map isMatch(Lexer lexer) throws Exception {
+  public Map isMatch(Lexer lexer) throws Exception {
  
   	int width = -1;
   	int height = -1;
@@ -387,19 +387,6 @@ public class Lexer {
 	  	}
 	  }
 	  return new Map(width, height, stringArray, elementsList, encodingMap);
-  }
-	  
-	  
-  public static void main(String[] args) throws Exception {
-    var path = Path.of("maps/monster_house.map");
-    var text = Files.readString(path);
-    var lexer = new Lexer(text);
-    Result result;
-    var map = lexer.isMatch(lexer);
-    System.out.println(map);
-//    while((result = lexer.nextResult()) != null) {
-//      System.out.println(result);
-//    }
   }
   
 }
