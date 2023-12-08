@@ -24,8 +24,12 @@ public class Map {
 		return this.height;
 	}
 	
-	public int getWidht() {
+	public int getWidth() {
 		return this.width;
+	}
+	
+	public String[][] getObstacles(){
+		return this.obstacles;
 	}
 	
 	public String printObstacles() {
