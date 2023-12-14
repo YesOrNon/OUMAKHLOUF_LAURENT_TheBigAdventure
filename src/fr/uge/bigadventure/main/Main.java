@@ -19,7 +19,7 @@ public class Main {
   
   public static void main(String[] args) throws IOException, Exception {
 		//On charge la map
-		var path = Path.of("maps/fun.map");
+		var path = Path.of("ressources/maps/fun.map");
 		//on lit le fichier
 		var text = Files.readString(path);
 		//on n'analyse
