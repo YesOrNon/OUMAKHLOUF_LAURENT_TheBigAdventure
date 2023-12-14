@@ -58,6 +58,7 @@ public class Graphic {
 	  
 	  // charger des ressources depuis le classpath
 	  //var input = getResourceAsStream("img/" + thing.skin() + ".png");
+	  //image = ImageIO.read(input);
   }
   
   public void graphicMap(Graphics2D map, Map grid) {
